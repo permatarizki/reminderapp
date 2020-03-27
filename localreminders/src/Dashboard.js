@@ -47,6 +47,8 @@ export default class Dashboard extends Component {
     const title = Platform.OS === 'android' ? 'Daily Reminder' : '';
     const notification = new firebase.notifications.Notification({
       // sound: firebase.notifications.Android.Defaults.Sound,
+      show_in_foreground: true,
+      show_in_background: true,
     })
       .setNotificationId('1') // Any random ID
       .setTitle(title) // Title of the notification
