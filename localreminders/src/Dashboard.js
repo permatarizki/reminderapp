@@ -28,7 +28,7 @@ export default class Dashboard extends Component {
 
     if (enableNotification) {
       // schedule notification
-      console.log('create notif');
+      console.log('create notif', notificationTime.valueOf());
       this.notif = firebase
         .notifications()
         .scheduleNotification(this.buildNotification(), {
@@ -47,12 +47,10 @@ export default class Dashboard extends Component {
     const title = Platform.OS === 'android' ? 'Daily Reminder' : '';
     const notification = new firebase.notifications.Notification({
       // sound: firebase.notifications.Android.Defaults.Sound,
-      show_in_foreground: true,
-      show_in_background: true,
     })
       .setNotificationId('1') // Any random ID
       .setTitle(title) // Title of the notification
-      .setBody('This is a notification') // body of notification
+      .setBody('This is a reminder') // body of notification
       .android.setPriority(firebase.notifications.Android.Priority.High) // set priority in Android
       .android.setChannelId('reminder') // should be the same when creating channel for Android
       .android.setAutoCancel(true); // To remove notification when tapped on it
@@ -72,10 +70,13 @@ export default class Dashboard extends Component {
   };
   handleDatePicked = (event, date) => {
     this.hideDateTimePicker();
-    this.setReminder();
+
+    console.log(date);
+    console.log(moment(date));
     this.setState({
       notificationTime: moment(date),
     });
+    this.setReminder();
   };
 
   render() {

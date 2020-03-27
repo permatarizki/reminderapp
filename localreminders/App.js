@@ -33,7 +33,7 @@ export default class App extends Component {
         .onNotification(async notification => {
           // Display your notification
           console.log('onNotif', notification);
-          notification.android.setChannelId(notification.data.channelId);//create channel ID
+          notification.android.setChannelId('reminder'); //create channel ID
           await firebase.notifications().displayNotification(notification);
         });
       this.messageListener = firebase.messaging().onMessage((message) => {
