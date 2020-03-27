@@ -10,6 +10,8 @@ export default class App extends Component {
 
     // Ask notification permission and add notification listener
     this.checkPermission();
+
+    //
   }
   createNotificationChannel = () => {
     // Build a android notification channel
@@ -30,8 +32,17 @@ export default class App extends Component {
         .notifications()
         .onNotification(async notification => {
           // Display your notification
+          console.log('onNotif', notification);
+          notification.android.setChannelId(notification.data.channelId);//create channel ID
           await firebase.notifications().displayNotification(notification);
         });
+      this.messageListener = firebase.messaging().onMessage((message) => {
+        // Process your message as required
+        console.log('msg listerner', message);
+      });
+      firebase.notifications().onNotificationDisplayed(notif => {
+        console.log('OnNotifDisplay', notif);
+      });
     } else {
       // user doesn't have permission
       try {

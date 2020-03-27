@@ -1,5 +1,12 @@
 import React, {Component} from 'react';
-import {Platform, StyleSheet, Text, SafeAreaView, View, Alert} from 'react-native';
+import {
+  Platform,
+  StyleSheet,
+  Text,
+  SafeAreaView,
+  View,
+  Alert,
+} from 'react-native';
 import {ListItem} from 'react-native-elements';
 import firebase from 'react-native-firebase';
 // import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -21,19 +28,28 @@ export default class Dashboard extends Component {
 
     if (enableNotification) {
       // schedule notification
-      firebase.notifications().scheduleNotification(this.buildNotification(), {
-        fireDate: notificationTime.valueOf(),
-        repeatInterval: 'day',
-        exact: true,
-      });
+      console.log('create notif');
+      this.notif = firebase
+        .notifications()
+        .scheduleNotification(this.buildNotification(), {
+          fireDate: notificationTime.valueOf(),
+          repeatInterval: 'day',
+          exact: true,
+        });
+      console.log(this.notif);
     } else {
+      console.log('gagal');
       return false;
     }
   };
 
   buildNotification = () => {
     const title = Platform.OS === 'android' ? 'Daily Reminder' : '';
-    const notification = new firebase.notifications.Notification()
+    const notification = new firebase.notifications.Notification({
+      // sound: firebase.notifications.Android.Defaults.Sound,
+      show_in_foreground: true,
+      show_in_background: true,
+    })
       .setNotificationId('1') // Any random ID
       .setTitle(title) // Title of the notification
       .setBody('This is a notification') // body of notification
@@ -56,7 +72,7 @@ export default class Dashboard extends Component {
   };
   handleDatePicked = (event, date) => {
     this.hideDateTimePicker();
-    console.log(date);
+    this.setReminder();
     this.setState({
       notificationTime: moment(date),
     });
